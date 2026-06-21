@@ -78,7 +78,34 @@ CREATE TABLE IF NOT EXISTS ad_spend (
 );
 
 -- ============================================================
--- VIEW báo cáo: ROAS theo từng ad_id
+-- VIEW 1 — LAST-TOUCH: ad_id GẦN NHẤT của mỗi hội thoại
+--   (1 hội thoại có nhiều ad_id → lấy referral mới nhất theo referred_at)
+-- ============================================================
+CREATE OR REPLACE VIEW v_conversation_ad AS
+SELECT DISTINCT ON (psid)
+       psid, ad_id, ref, source, referred_at
+FROM ad_referrals
+WHERE source = 'ADS'
+ORDER BY psid, referred_at DESC NULLS LAST;
+
+-- ============================================================
+-- VIEW 2 — TỈ LỆ GHI NHẬN theo ngày
+--   = (hội thoại có ad_id) / (tổng hội thoại có tin nhắn), cùng ngày
+-- ============================================================
+CREATE OR REPLACE VIEW v_daily_coverage AS
+SELECT date(m.sent_at)                                              AS ngay,
+       count(DISTINCT m.psid)                                       AS tong_hoithoai,
+       count(DISTINCT m.psid) FILTER (WHERE ca.psid IS NOT NULL)    AS co_adid,
+       round(100.0 * count(DISTINCT m.psid) FILTER (WHERE ca.psid IS NOT NULL)
+             / NULLIF(count(DISTINCT m.psid), 0), 1)                AS ty_le_ghi_nhan_pct
+FROM messages m
+LEFT JOIN v_conversation_ad ca ON ca.psid = m.psid
+WHERE m.sent_at IS NOT NULL
+GROUP BY date(m.sent_at)
+ORDER BY 1 DESC;
+
+-- ============================================================
+-- VIEW 3 — ROAS theo từng ad_id (dùng LAST-TOUCH)
 --   tin nhắn mới  ·  khách chốt  ·  doanh thu  ·  chi tiêu  ·  ROAS
 -- ============================================================
 CREATE OR REPLACE VIEW v_ad_attribution AS
@@ -91,7 +118,7 @@ SELECT
     CASE WHEN COALESCE(s.spend,0) > 0
          THEN ROUND(COALESCE(SUM(o.revenue),0)::NUMERIC / s.spend, 2)
          ELSE NULL END                                   AS roas
-FROM ad_referrals r
+FROM v_conversation_ad r                       -- last-touch: 1 ad_id / hội thoại
 LEFT JOIN customers c ON c.psid = r.psid
 LEFT JOIN orders    o ON (o.psid = r.psid OR o.phone = c.phone)
 LEFT JOIN (SELECT ad_id, SUM(spend) spend FROM ad_spend GROUP BY ad_id) s

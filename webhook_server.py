@@ -73,7 +73,8 @@ async def receive(request: Request):
         page_id = entry.get("id")
         for ev in entry.get("messaging", []):
             psid = ev.get("sender", {}).get("id")
-            ts_event = ts(ev.get("timestamp"))
+            # Dùng thời gian Meta; nếu thiếu/0 thì lấy giờ server (tránh mốc 1970)
+            ts_event = ts(ev.get("timestamp")) or datetime.now(timezone.utc)
 
             # 1) REFERRAL — ad_id đến từ quảng cáo Click-to-Messenger/Direct
             #    Có thể nằm ở ev['referral'] (đã có hội thoại) hoặc
@@ -126,11 +127,13 @@ def save_message(page_id, platform, psid, msg, when, direction):
                VALUES (%s,%s,%s,%s) ON CONFLICT (psid) DO NOTHING""",
             (psid, platform, page_id, when),
         )
+        # Meta thật luôn có 'mid'; fallback phòng trường hợp thiếu để không mất tin
+        mid = msg.get("mid") or f"nomid_{psid}_{int(when.timestamp()) if when else 0}"
         cur.execute(
             """INSERT INTO messages(message_id, psid, direction, body, sent_at)
                VALUES (%s,%s,%s,%s,%s)
                ON CONFLICT (message_id) DO NOTHING""",
-            (msg.get("mid"), psid, direction, msg.get("text"), when),
+            (mid, psid, direction, msg.get("text"), when),
         )
 
 
