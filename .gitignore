@@ -1,0 +1,8 @@
+# KHÔNG đẩy các thứ nhạy cảm / rác lên GitHub
+.env
+venv/
+__pycache__/
+*.pyc
+events.jsonl
+cf.tgz
+cloudflared

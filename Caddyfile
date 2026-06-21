@@ -1,0 +1,5 @@
+# Đổi 'webhook.centbeauty.vn' thành domain thật của anh (A-record trỏ về IP VPS).
+# Caddy tự xin SSL Let's Encrypt — không cần cấu hình chứng chỉ thủ công.
+webhook.centbeauty.vn {
+    reverse_proxy web:8000
+}

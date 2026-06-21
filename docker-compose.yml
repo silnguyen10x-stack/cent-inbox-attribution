@@ -1,0 +1,52 @@
+# Cent Beauty — deploy production webhook + Postgres + Caddy (auto HTTPS)
+# Dùng cho VPS bất kỳ (BizFly/FPT/DigitalOcean). Cần 1 domain trỏ A-record về IP VPS.
+#
+#   1. Sửa DOMAIN trong Caddyfile + mật khẩu DB bên dưới.
+#   2. docker compose up -d
+#   3. Callback URL webhook = https://<domain>/webhook
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: cent
+      POSTGRES_PASSWORD: doi_mat_khau_manh_o_day   # ĐỔI mật khẩu này
+      POSTGRES_DB: cent_inbox
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cent -d cent_inbox"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      VERIFY_TOKEN: cent_beauty_2026_secret        # khớp với verify token khai trong Meta
+      DATABASE_URL: postgresql://cent:doi_mat_khau_manh_o_day@db:5432/cent_inbox
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2
+    restart: always
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
