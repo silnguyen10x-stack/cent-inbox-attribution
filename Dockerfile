@@ -5,6 +5,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY webhook_server.py .
+COPY ads_sync.py .
 COPY schema.sql .
 
 EXPOSE 8000

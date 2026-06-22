@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cent Beauty — Đo lường Inbox & Quảng cáo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rp-canvas:#FAF6F0; --rp-surface:#FFFFFF; --rp-surface-alt:#F5F1EA; --rp-surface-sunken:#F0EAE0;
+  --rp-hairline:#ECE6DD; --rp-hairline-strong:#D9CFC0;
+  --rp-text:#2B1F1A; --rp-text-secondary:#5C4D44; --rp-text-tertiary:#8A7A6E; --rp-text-on-accent:#FFF;
+  --rp-accent:#8A5A4D; --rp-accent-hover:#6F463B; --rp-accent-soft:#F0E2DB; --rp-accent-line:#B87D6A;
+  --rp-positive:#4E6B45; --rp-positive-bg:#E8EDE3; --rp-negative:#9B3535; --rp-negative-bg:#F5E3E1;
+  --rp-warning:#8C5E10; --rp-warning-bg:#F7EDD8; --rp-info:#3F6075; --rp-info-bg:#E4EBF0; --rp-neutral:#8A7A6E;
+  --rp-cat-1:#8A5A4D; --rp-cat-2:#3F6075; --rp-cat-3:#4E6B45; --rp-cat-4:#A8761F; --rp-cat-5:#6E5773; --rp-cat-6:#B5876B;
+  --rp-font-ui:"Be Vietnam Pro",Inter,system-ui,sans-serif; --rp-font-num:"Roboto Mono",ui-monospace,monospace;
+  --rp-shadow-card:0 2px 8px rgba(43,31,26,.06);
+}
+*{box-sizing:border-box}
+body{background:var(--rp-canvas);color:var(--rp-text);font-family:var(--rp-font-ui);margin:0;-webkit-font-smoothing:antialiased;font-size:14px}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 48px}
+.num{font-family:var(--rp-font-num);font-variant-numeric:tabular-nums}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+h1{font-size:24px;font-weight:700;margin:0;letter-spacing:-.01em}
+.sub{font-size:13px;color:var(--rp-text-secondary);margin-top:4px}
+.src{font-size:12px;color:var(--rp-text-tertiary);text-align:right}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--rp-positive);margin-right:5px;vertical-align:middle}
+.banner{background:var(--rp-warning-bg);color:var(--rp-warning);border-radius:10px;padding:10px 14px;font-size:13px;margin:14px 0 20px;display:flex;gap:8px}
+.grid{display:grid;gap:16px}
+.k4{grid-template-columns:repeat(4,1fr)}
+.c2{grid-template-columns:1.15fr .85fr}
+.card{background:var(--rp-surface);border-radius:10px;box-shadow:var(--rp-shadow-card);padding:18px 20px}
+.overline{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--rp-text-secondary)}
+.metric{font-family:var(--rp-font-num);font-variant-numeric:tabular-nums;font-weight:600;line-height:1.05;margin-top:8px}
+.m-hero{font-size:38px} .m-xl{font-size:30px}
+.unit{font-size:.55em;font-weight:400;color:var(--rp-text-tertiary)}
+.ctx{font-size:12px;color:var(--rp-text-tertiary);margin-top:7px}
+.delta{font-family:var(--rp-font-num);font-weight:600;font-size:13px}
+.delta.up{color:var(--rp-positive)} .delta.down{color:var(--rp-negative)}
+.sect-t{font-size:18px;font-weight:600;margin:26px 0 12px}
+.card h3{font-size:14px;font-weight:600;margin:0 0 16px}
+/* bar chart */
+.bars{display:flex;flex-direction:column;gap:11px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px;font-size:13px}
+.bar-track{background:var(--rp-surface-sunken);border-radius:5px;height:18px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px}
+.bar-val{font-family:var(--rp-font-num);font-variant-numeric:tabular-nums;text-align:right;color:var(--rp-text-secondary);font-size:13px}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--rp-surface-alt);font-size:13px;font-weight:600;color:var(--rp-text-secondary);text-align:left;padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--rp-hairline);color:var(--rp-text)}
+th.num,td.num{text-align:right;font-family:var(--rp-font-num);font-variant-numeric:tabular-nums}
+tr:hover td{background:var(--rp-accent-soft)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:9999px}
+.pill.ad{background:var(--rp-accent-soft);color:var(--rp-accent)}
+.pill.org{background:var(--rp-surface-sunken);color:var(--rp-text-tertiary)}
+.pending{color:var(--rp-text-tertiary);font-style:italic;font-size:12px}
+.foot{font-size:12px;color:var(--rp-text-tertiary);margin-top:24px;line-height:1.6;border-top:1px solid var(--rp-hairline);padding-top:14px}
+.foot b{color:var(--rp-text-secondary)}
+@media(max-width:880px){.k4{grid-template-columns:repeat(2,1fr)}.c2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>Cent Beauty — Đo lường Inbox &amp; Quảng cáo</h1>
+      <div class="sub">Khách nhắn tin → quảng cáo → nhu cầu. Hệ đo lường real-time.</div>
+    </div>
+    <div class="src"><span class="dot"></span>Đang chạy · Nguồn: webhook production<br>Dữ liệu ngày <b>21/06/2026</b> (ngày đầu vận hành)</div>
+  </header>
+
+  <div class="banner">⚠️ <div>Đây là <b>ngày đầu</b> sau khi hệ lên sóng — mẫu còn nhỏ (21 hội thoại). Cấu trúc &amp; số sẽ chuẩn hoá khi tích luỹ. Cột <b>CPA/ROAS</b> chờ nối <b>ad_spend (Ads MCP)</b> và <b>POS (doanh thu)</b>.</div></div>
+
+  <!-- KPI ROW -->
+  <div class="grid k4">
+    <div class="card">
+      <div class="overline">Tổng hội thoại</div>
+      <div class="metric m-hero num">21</div>
+      <div class="ctx">khách có nhắn tin · hôm nay</div>
+    </div>
+    <div class="card">
+      <div class="overline">Hội thoại từ quảng cáo</div>
+      <div class="metric m-hero num" style="color:var(--rp-accent)">6</div>
+      <div class="ctx">được gắn ad_id (last-touch)</div>
+    </div>
+    <div class="card">
+      <div class="overline">Tỉ lệ ghi nhận từ ads</div>
+      <div class="metric m-hero num">28,6<span class="unit">%</span></div>
+      <div class="ctx">hội thoại từ ads ÷ tổng hội thoại</div>
+    </div>
+    <div class="card">
+      <div class="overline">Quảng cáo đang ra khách</div>
+      <div class="metric m-hero num">4</div>
+      <div class="ctx">ad_id khác nhau có khách inbox</div>
+    </div>
+  </div>
+
+  <div class="sect-t">Nhu cầu &amp; Quảng cáo</div>
+  <div class="grid c2">
+    <!-- DEMAND -->
+    <div class="card">
+      <h3>Khách hỏi gì nhiều nhất (khai thác nội dung tin)</h3>
+      <div class="bars">
+        <div class="bar-row"><span>Hỏi giá / bảng giá</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--rp-cat-1)"></div></div><span class="bar-val">7</span></div>
+        <div class="bar-row"><span>Đặt lịch</span><div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--rp-cat-3)"></div></div><span class="bar-val">5</span></div>
+        <div class="bar-row"><span>Triệt nách / tay chân</span><div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--rp-cat-2)"></div></div><span class="bar-val">4</span></div>
+        <div class="bar-row"><span>Fullbody / combo</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--rp-cat-4)"></div></div><span class="bar-val">3</span></div>
+        <div class="bar-row"><span>Hỏi cơ sở / địa chỉ</span><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--rp-cat-5)"></div></div><span class="bar-val">2</span></div>
+        <div class="bar-row"><span>Ưu đãi khách cũ</span><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--rp-cat-6)"></div></div><span class="bar-val">2</span></div>
+      </div>
+      <div class="ctx" style="margin-top:14px">Phân loại bằng từ khoá trên tin khách. Mẫu ngày đầu — sẽ chính xác hơn khi dùng AI phân loại + tích luỹ dữ liệu.</div>
+    </div>
+    <!-- CAPTURE -->
+    <div class="card">
+      <h3>Tỉ lệ ghi nhận từ ads — theo ngày</h3>
+      <div style="display:flex;align-items:flex-end;gap:18px;height:150px;padding:8px 4px 0">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
+          <div class="num" style="font-size:13px;color:var(--rp-accent);font-weight:600;margin-bottom:6px">28,6%</div>
+          <div style="width:54px;height:43%;background:var(--rp-accent);border-radius:6px 6px 0 0"></div>
+          <div style="font-size:12px;color:var(--rp-text-secondary);margin-top:8px">21/06</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;opacity:.4">
+          <div class="num" style="font-size:13px;color:var(--rp-text-tertiary);margin-bottom:6px">—</div>
+          <div style="width:54px;height:8px;background:var(--rp-surface-sunken);border-radius:6px 6px 0 0"></div>
+          <div style="font-size:12px;color:var(--rp-text-tertiary);margin-top:8px">22/06</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;opacity:.4">
+          <div class="num" style="font-size:13px;color:var(--rp-text-tertiary);margin-bottom:6px">—</div>
+          <div style="width:54px;height:8px;background:var(--rp-surface-sunken);border-radius:6px 6px 0 0"></div>
+          <div style="font-size:12px;color:var(--rp-text-tertiary);margin-top:8px">23/06</div>
+        </div>
+      </div>
+      <div class="ctx" style="margin-top:10px">Cần ≥1 ngày đầy đủ để đối chiếu với số Meta báo → ra <b>độ trung thực bắt</b> (có miss referral không).</div>
+    </div>
+  </div>
+
+  <!-- AD TABLE -->
+  <div class="sect-t">Quảng cáo đang ra khách (last-touch)</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr>
+        <th>Ad ID</th><th class="num">Hội thoại</th><th class="num">Chi tiêu</th>
+        <th class="num">CPA thật</th><th class="num">Khách chốt</th><th class="num">ROAS</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="num">120244179396530590</td><td class="num">2</td><td class="num"><span class="pending">chờ ad_spend</span></td><td class="num"><span class="pending">—</span></td><td class="num"><span class="pending">chờ POS</span></td><td class="num"><span class="pending">—</span></td></tr>
+        <tr><td class="num">120246673459040790</td><td class="num">2</td><td class="num"><span class="pending">chờ ad_spend</span></td><td class="num"><span class="pending">—</span></td><td class="num"><span class="pending">chờ POS</span></td><td class="num"><span class="pending">—</span></td></tr>
+        <tr><td class="num">120250506302770790</td><td class="num">1</td><td class="num"><span class="pending">chờ ad_spend</span></td><td class="num"><span class="pending">—</span></td><td class="num"><span class="pending">chờ POS</span></td><td class="num"><span class="pending">—</span></td></tr>
+        <tr><td class="num">120243717591660590</td><td class="num">1</td><td class="num"><span class="pending">chờ ad_spend</span></td><td class="num"><span class="pending">—</span></td><td class="num"><span class="pending">chờ POS</span></td><td class="num"><span class="pending">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ctx" style="margin-top:8px">Khi nối <b>ad_spend</b> (Ads MCP) → có <b>CPA thật/ad</b> ngay. Khi nối <b>POS</b> → có <b>ROAS thật</b>. Đây là đầu vào cho skill <i>cent-ads-optimizer</i> để khuyến nghị cắt/scale.</div>
+
+  <!-- RECENT -->
+  <div class="sect-t">Hội thoại gần nhất</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>Khách (psid)</th><th>Tin đầu</th><th>Nguồn</th><th>Giờ</th></tr></thead>
+      <tbody>
+        <tr><td class="num">…194190</td><td>Dạ khách cũ có đc thêm ưu đãi j k ạ</td><td><span class="pill org">organic</span></td><td class="num">12:34</td></tr>
+        <tr><td class="num">…337654</td><td>Cho mình hỏi bên spa có những cơ sở nào vậy ạ</td><td><span class="pill ad">từ ads</span></td><td class="num">12:33</td></tr>
+        <tr><td class="num">…625389</td><td>Mình muốn tham khảo bảng giá triệt lông bên s…</td><td><span class="pill ad">từ ads</span></td><td class="num">12:33</td></tr>
+        <tr><td class="num">…892675</td><td>shop ơi hôm trước tớ triệt hôm m9 thì 23 buổi…</td><td><span class="pill ad">từ ads</span></td><td class="num">12:25</td></tr>
+        <tr><td class="num">…882533</td><td>E đặt lịch triệt nách+tay vào 11h ngày mai</td><td><span class="pill org">organic</span></td><td class="num">12:28</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <b>Nguồn dữ liệu:</b> webhook production (VPS BizFly · Postgres) · cập nhật real-time.<br>
+    <b>Chờ tích hợp:</b> ad_spend (Ads MCP) → CPA/ad · POS/CRM → ROAS &amp; sản phẩm · phân loại AI → nhu cầu chính xác.<br>
+    <b>Rủi ro &amp; phản biện:</b> (1) Mẫu ngày đầu rất nhỏ — đừng ra quyết định ngân sách lớn dựa trên 21 hội thoại. (2) Phân loại nhu cầu hiện bằng từ khoá thô, có sai số. (3) "Tỉ lệ ghi nhận 28,6%" là tỉ lệ hội thoại đến từ ads, CHƯA phải độ trung thực bắt — cần đối chiếu Meta. (4) Số liệu trên là <b>dữ liệu thật + một phần ước tính nhu cầu</b>; cột CPA/ROAS là <b>placeholder</b> chờ tích hợp.
+  </div>
+
+</div>
+</body>
+</html>
